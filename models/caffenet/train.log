@@ -1,0 +1,408 @@
+I0421 21:36:38.561045  5262 caffe.cpp:185] Using GPUs 0
+I0421 21:36:38.836500  5262 solver.cpp:48] Initializing solver from parameters: 
+test_iter: 100
+test_interval: 1000
+base_lr: 0.0001
+display: 10
+max_iter: 10000
+lr_policy: "step"
+gamma: 0.1
+momentum: 0.9
+weight_decay: 0.0005
+stepsize: 10000
+snapshot: 10000
+snapshot_prefix: "urop/dance/models/caffenet/sh_caffenet_train"
+solver_mode: GPU
+device_id: 0
+net: "urop/dance/models/caffenet/sh_train_val.prototxt"
+I0421 21:36:38.837003  5262 solver.cpp:91] Creating training net from net file: urop/dance/models/caffenet/sh_train_val.prototxt
+I0421 21:36:38.838116  5262 net.cpp:322] The NetState phase (0) differed from the phase (1) specified by a rule in layer data
+I0421 21:36:38.838157  5262 net.cpp:322] The NetState phase (0) differed from the phase (1) specified by a rule in layer acc
+I0421 21:36:38.838377  5262 net.cpp:49] Initializing net from parameters: 
+name: "UROP-CaffeNet"
+state {
+  phase: TRAIN
+}
+layer {
+  name: "data"
+  type: "ImageData"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    mirror: true
+    crop_size: 227
+    mean_file: "data/ilsvrc12/imagenet_mean.binaryproto"
+  }
+  image_data_param {
+    source: "urop/dance/train.txt"
+    batch_size: 256
+    shuffle: true
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 11
+    stride: 4
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "conv1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "norm1"
+  type: "LRN"
+  bottom: "pool1"
+  top: "norm1"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "norm1"
+  top: "conv2"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 2
+    kernel_size: 5
+    group: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 1
+    }
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv2"
+  top: "conv2"
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "conv2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "norm2"
+  type: "LRN"
+  bottom: "pool2"
+  top: "norm2"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "norm2"
+  top: "conv3"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv3"
+  top: "conv3"
+}
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "conv3"
+  top: "conv4"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    group: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 1
+    }
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "conv4"
+  top: "conv4"
+}
+layer {
+  name: "conv5"
+  type: "Convolution"
+  bottom: "conv4"
+  top: "conv5"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+    group: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 1
+    }
+  }
+}
+layer {
+  name: "relu5"
+  type: "ReLU"
+  bottom: "conv5"
+  top: "conv5"
+}
+layer {
+  name: "pool5"
+  type: "Pooling"
+  bottom: "conv5"
+  top: "pool5"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "fc6"
+  type: "InnerProduct"
+  bottom: "pool5"
+  top: "fc6"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 1
+    }
+  }
+}
+layer {
+  name: "relu6"
+  type: "ReLU"
+  bottom: "fc6"
+  top: "fc6"
+}
+layer {
+  name: "drop6"
+  type: "Dropout"
+  bottom: "fc6"
+  top: "fc6"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc7"
+  type: "InnerProduct"
+  bottom: "fc6"
+  top: "fc7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 1
+    }
+  }
+}
+layer {
+  name: "relu7"
+  type: "ReLU"
+  bottom: "fc7"
+  top: "fc7"
+}
+layer {
+  name: "drop7"
+  type: "Dropout"
+  bottom: "fc7"
+  top: "fc7"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc8_urop"
+  type: "InnerProduct"
+  bottom: "fc7"
+  top: "fc8_urop"
+  param {
+    lr_mult: 10
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 20
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 7
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc8_urop"
+  bottom: "label"
+  top: "loss"
+}
+I0421 21:36:38.838529  5262 layer_factory.hpp:77] Creating layer data
+I0421 21:36:38.839397  5262 net.cpp:106] Creating Layer data
+I0421 21:36:38.839407  5262 net.cpp:411] data -> data
+I0421 21:36:38.839427  5262 net.cpp:411] data -> label
+I0421 21:36:38.839440  5262 data_transformer.cpp:25] Loading mean file from: data/ilsvrc12/imagenet_mean.binaryproto
+I0421 21:36:38.858454  5262 image_data_layer.cpp:38] Opening file urop/dance/train.txt
+I0421 21:36:38.920143  5262 image_data_layer.cpp:48] Shuffling data
+I0421 21:36:38.937369  5262 image_data_layer.cpp:53] A total of 129810 images.
+E0421 21:36:38.937423  5262 io.cpp:80] Could not open or find file /home/yushi/caffe/urop/dance/data/thumbs/square/z-ybbyzhrF8_0067.jpg
+F0421 21:36:38.937561  5262 image_data_layer.cpp:67] Check failed: cv_img.data Could not load /home/yushi/caffe/urop/dance/data/thumbs/square/z-ybbyzhrF8_0067.jpg
+*** Check failure stack trace: ***
+    @     0x7fb2fd794daa  (unknown)
+    @     0x7fb2fd794ce4  (unknown)
+    @     0x7fb2fd7946e6  (unknown)
+    @     0x7fb2fd797687  (unknown)
+    @     0x7fb2fddceb17  caffe::ImageDataLayer<>::DataLayerSetUp()
+    @     0x7fb2fdd99173  caffe::BasePrefetchingDataLayer<>::LayerSetUp()
+    @     0x7fb2fde8cc05  caffe::Net<>::Init()
+    @     0x7fb2fde8dcb5  caffe::Net<>::Net()
+    @     0x7fb2fde38b6a  caffe::Solver<>::InitTrainNet()
+    @     0x7fb2fde39c7c  caffe::Solver<>::Init()
+    @     0x7fb2fde39faa  caffe::Solver<>::Solver()
+    @     0x7fb2fdea3783  caffe::Creator_SGDSolver<>()
+    @           0x40e82e  caffe::SolverRegistry<>::CreateSolver()
+    @           0x407a5b  train()
+    @           0x40592c  main
+    @     0x7fb2fcaa2ec5  (unknown)
+    @           0x406061  (unknown)
+    @              (nil)  (unknown)
