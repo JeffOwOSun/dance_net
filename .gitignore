@@ -1,4 +1,8 @@
 *.caffemodel
 *.solverstate
 *.json
-*data/
+
+*.pyc
+*.qk
+
+*.npy
