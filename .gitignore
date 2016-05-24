@@ -4,5 +4,9 @@
 
 *.pyc
 *.qk
+*.log
+*.pb
 
 *.npy
+
+*/saves/

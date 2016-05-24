@@ -1,0 +1,10 @@
+ballet
+waltz
+latin
+tango
+break
+square
+swing
+flamenco
+quickstep
+foxtrot
