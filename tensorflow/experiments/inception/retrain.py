@@ -155,7 +155,6 @@ MODEL_INPUT_DEPTH = 3
 JPEG_DATA_TENSOR_NAME = 'DecodeJpeg/contents:0'
 RESIZED_INPUT_TENSOR_NAME = 'ResizeBilinear:0'
 
-
 def create_image_lists(image_dir, testing_percentage, validation_percentage):
   """Builds a list of training images from the file system.
 
@@ -524,7 +523,7 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
   """
   correct_prediction = tf.equal(
       tf.argmax(result_tensor, 1), tf.argmax(ground_truth_tensor, 1))
-  evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, 'float'))
+  evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, 'float'), name="accuracy")
   return evaluation_step
 
 
@@ -642,6 +641,8 @@ def main(_):
   print('Final test accuracy = %.1f%%' % (test_accuracy * 100))
 
   # Write out the trained graph and labels with the weights stored as constants.
+  print(tf.all_variables())
+  raw_input('press enter')
   output_graph_def = graph_util.convert_variables_to_constants(
       sess, graph.as_graph_def(), [FLAGS.final_tensor_name])
   #print(output_graph_def.SerializeToString)
